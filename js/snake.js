@@ -19,15 +19,20 @@ function Snake(game) {
   this.h = 20;
   this.setListeners();
 
-  this.body = []
-
- 
+  this.body = [
+    {
+      x: this.x,
+      y: this.y, 
+      direction: this.direction
+    }
+  ];
 
   this.direction; //variable para reflejar la dirección hacia la que esta moviendose
-                  //la cabeza de la serpiente
+  //la cabeza de la serpiente
 }
 
 Snake.prototype.setListeners = function() {
+  
   document.onkeydown = function(event) {
     switch (event.keyCode) {
       case KEY_RIGHT:
@@ -50,38 +55,61 @@ Snake.prototype.setListeners = function() {
 };
 
 Snake.prototype.draw = function() {
-  this.game.ctx.fillRect(this.x, this.y, this.w, this.h);
-  this.body.forEach(function(e, i){
-    this.game.ctx.fillRect(e, e+1, this.w, this.h)
-    i++;
-  }.bind(this))
-  
-    // this.game.ctx.fillStyle= "black";
-    
+  /**/
 
-    // this.game.ctx.fillStyle= "#FF0000";
-  
+  for (var i = 0; i < this.body.length; i++) {
+ 
+    this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
+  }
+
+  // this.game.ctx.fillStyle= "black";
+
+  // this.game.ctx.fillStyle= "#FF0000";
 };
 
 Snake.prototype.move = function() {
-  /**/ 
+
   switch (this.direction) {
+    
     case "RIGHT":
+      //hay que mover todo el cuerpo de la serpiente
+      for (var i = 0; i < this.body.length; i++) {
+        if(i===0){
+          this.body[i].x = this.body[i].x + this.w
+        }else{
+          this.body[i].x = this.body[i].x + this.w
+        }
+        
+      }
+      break;
+/*
       if (this.x <= this.game.canvas.width) {
         this.x = this.x + 10;
         break;
       } else {
         this.x = 0;
-      }
+      }*/
 
     case "DOWN":
       this.y = this.y + 10;
       break;
 
     case "UP":
+
+    for (var i = 0; i < this.body.length; i++) {
+      if(i===0){
+        this.body[i].y = this.body[i].y - this.w
+      }else{
+      //  this.body[i].y = this.body[i].y - this.w
+      }
+      
+    }
+    break;
+
+    /*
       this.y = this.y - 10;
       break;
-
+*/
     case "LEFT":
       if (this.x >= 0) {
         this.x = this.x - 10;
@@ -95,8 +123,12 @@ Snake.prototype.move = function() {
   }
 };
 
-Snake.prototype.grow = function(){
+Snake.prototype.grow = function() {
+
+  if(this.direction == "RIGHT"){
   
-  this.body.push(this.x-this.w, this.y);
-  console.log(this.body)
-}
+    this.body.push({ x: this.x + this.w*this.body.length, y: this.y });
+  
+  }
+
+};

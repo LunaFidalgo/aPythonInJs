@@ -31,24 +31,65 @@ function Snake(game) {
     }
   ];
   this.direction = "RIGHT";
+
+  this.speed = 100;
+
+  this.desease = false;
 }
 
 Snake.prototype.setListeners = function() {
   document.onkeydown = function(event) {
     switch (event.keyCode) {
       case KEY_RIGHT:
-        this.direction = "RIGHT";
+        if (this.direction === "LEFT") {
+          //this.direction = "RIGHT";
+          clearInterval(this.game.intervalId);
+        }
+        if (this.desease) {
+          this.direction = "LEFT";
+        } else {
+          this.direction = "RIGHT";
+        }
+
         break;
 
       case KEY_DOWN:
-        this.direction = "DOWN";
+        if (this.direction === "UP") {
+          //this.direction = "DOWN";
+          clearInterval(this.game.intervalId);
+        }
+        if (this.desease) {
+          this.direction = "UP";
+        } else {
+          this.direction = "DOWN";
+        }
+
         break;
 
       case KEY_UP:
-        this.direction = "UP";
+        if (this.direction === "DOWN") {
+          // this.direction = "UP";
+          clearInterval(this.game.intervalId);
+        }
+
+        if (this.desease) {
+          this.direction = "DOWN";
+        } else {
+          this.direction = "UP";
+        }
         break;
 
       case KEY_LEFT:
+        if (this.direction === "RIGHT") {
+          // this.direction = "LEFT";
+          clearInterval(this.game.intervalId);
+        }
+        if (this.desease) {
+          this.direction = "RIGHT";
+        } else {
+          this.direction = "LEFT";
+        }
+
         this.direction = "LEFT";
         break;
     }
@@ -57,6 +98,7 @@ Snake.prototype.setListeners = function() {
 
 Snake.prototype.draw = function() {
   for (var i = 0; i < this.body.length; i++) {
+    this.game.ctx.fillStyle = "black";
     this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
   }
 };
@@ -81,30 +123,40 @@ Snake.prototype.move = function() {
         //la cabeza se mueve
         case "RIGHT":
           this.body[0].x = this.body[0].x + this.w;
+          if (this.body[0].x + this.w > this.game.canvas.width)
+            clearInterval(this.game.intervalId);
           break;
 
         case "UP":
           this.body[0].y = this.body[0].y - this.h;
+          if (this.body[0].y < 0) clearInterval(this.game.intervalId);
           break;
 
         case "LEFT":
           this.body[0].x = this.body[0].x - this.w;
+          if (this.body[0].x < 0) clearInterval(this.game.intervalId);
+
           break;
 
         case "DOWN":
           this.body[0].y = this.body[0].y + this.h;
+          if (this.body[0].y + this.h > this.game.canvas.height)
+            clearInterval(this.game.intervalId);
       }
     }
   }
 };
 
+Snake.prototype.collision = function (){
+  //colision consigo misma
+  
+}
 Snake.prototype.grow = function() {
   switch (this.direction) {
     case "RIGHT":
       this.body.push({
         x: this.body[this.body.length - 1].x - this.w * this.body.length,
         y: this.body[this.body.length - 1].y,
-        //se actualiza su nextPos como la posicion del ultimo del cuerpo
         nextPos: [
           this.body[this.body.length - 1].x,
           this.body[this.body.length - 1].y
@@ -116,7 +168,7 @@ Snake.prototype.grow = function() {
       this.body.push({
         x: this.body[this.body.length - 1].x,
         y: this.body[this.body.length - 1].y - this.h,
-        //se actualiza su nextPos como la posicion del ultimo del cuerpo
+
         nextPos: [
           this.body[this.body.length - 1].x,
           this.body[this.body.length - 1].y
@@ -129,7 +181,7 @@ Snake.prototype.grow = function() {
       this.body.push({
         x: this.body[this.body.length - 1].x - this.w,
         y: this.body[this.body.length - 1].y,
-        //se actualiza su nextPos como la posicion del ultimo del cuerpo
+
         nextPos: [
           this.body[this.body.length - 1].x,
           this.body[this.body.length - 1].y
@@ -141,7 +193,6 @@ Snake.prototype.grow = function() {
       this.body.push({
         x: this.body[this.body.length - 1].x,
         y: this.body[this.body.length - 1].y + this.h,
-        //se actualiza su nextPos como la posicion del ultimo del cuerpo
         nextPos: [
           this.body[this.body.length - 1].x,
           this.body[this.body.length - 1].y

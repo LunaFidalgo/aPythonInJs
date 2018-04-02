@@ -4,28 +4,57 @@ function Game(canvasId) {
   this.canvas = document.getElementById(canvasId);
   this.ctx = this.canvas.getContext("2d");
   this.snake = new Snake(this);
-  this.item = new Item(this);
+  this.item = new Item(this, "normal");
+  this.score = 0;
+  this.prueba = true;
+  this.otra = true; 
 }
 
 Game.prototype.start = function() {
-  this.intervalId = setInterval(
-    function() {
-     
-      this.clear();
-      this.snake.move();
-      this.snake.draw();
-      this.item.draw();
-   
-     if (this.itemEaten()) {
-        
-      this.item = new Item(this);
-        
 
-      this.snake.grow();
-     }
-    }.bind(this),
-    150
-  );
+ 
+    clearInterval(this.intervalId)
+   
+    this.intervalId = setInterval(
+      function() {
+        this.clear();
+        this.snake.move();
+        this.snake.draw();
+        this.item.draw();
+
+        if (this.itemEaten()) {
+          switch (this.item.type) {
+            case "speed-up":
+            this.snake.speed = 30;
+            this.otra = false; 
+            this.start();
+              break;
+
+            case "desease":
+              this.snake.desease = true;
+
+              case "normal": 
+              this.snake.speed = 100;
+              this.start();
+              //clearInterval(this.intervalId);
+
+          }
+          this.score++;
+          document.getElementById("score").innerHTML =
+            this.score + " " + "Points";
+            if(this.otra){
+               this.item = new Item(this, "speed-up");
+            }else{
+              this.item = new Item(this, "normal");
+            }
+         
+         // this.item = new Item(this, "normal")
+          this.snake.grow();
+        }
+      }.bind(this),
+     this.snake.speed
+    );
+  
 };
 
 Game.prototype.clear = function() {
@@ -33,9 +62,7 @@ Game.prototype.clear = function() {
 };
 
 Game.prototype.itemEaten = function() {
-  
   if (
-  
     /*condicion para coincidencia de las x (si solo estuviera esta
    cuando estuviera en el mismo punto del eje x, pero diferente en el y, saltaria) */
     this.snake.body[0].x < this.item.x + this.item.w &&
@@ -46,7 +73,7 @@ Game.prototype.itemEaten = function() {
     this.snake.body[0].y < this.item.y + this.item.h &&
     this.snake.body[0].y + this.snake.h > this.item.y
   ) {
-  console.log("SE LA COME")
+    console.log("SE LA COME");
     return true;
   } else {
     return false;

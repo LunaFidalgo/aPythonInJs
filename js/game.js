@@ -15,24 +15,16 @@ Game.prototype.start = function() {
       this.snake.move();
       this.snake.draw();
       this.item.draw();
-      if (this.itemEaten()) {
-       
-       /* this.item.x = this.item.x + 40; 
-        this.item.y = this.item.y;
-        */
-        /*
-        this.item.x = Math.floor(Math.random()*this.canvas.width-this.snake.w)
-        this.item.y = Math.floor(Math.random()*this.canvas.height-this.snake.h)
-        */
-        //necesito que el antiguo desaparezca 
-        //necesito que aparezca uno nuevo
-        //cambio las x y las y del antiguo por el nuevo
+   
+     if (this.itemEaten()) {
+        
+      this.item = new Item(this);
+        
 
-        //necesito que el cuerpo de la serpiente aumente en 1 cada vez que coma un item
-        this.snake.grow();
-      }
+      this.snake.grow();
+     }
     }.bind(this),
-    500
+    150
   );
 };
 
@@ -41,7 +33,7 @@ Game.prototype.clear = function() {
 };
 
 Game.prototype.itemEaten = function() {
-  debugger;
+  
   if (
   
     /*condicion para coincidencia de las x (si solo estuviera esta
@@ -54,7 +46,7 @@ Game.prototype.itemEaten = function() {
     this.snake.body[0].y < this.item.y + this.item.h &&
     this.snake.body[0].y + this.snake.h > this.item.y
   ) {
-  
+  console.log("SE LA COME")
     return true;
   } else {
     return false;

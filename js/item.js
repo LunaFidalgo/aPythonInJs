@@ -1,9 +1,13 @@
 function Item(game) {
-this.game = game;
-this.x = this.game.canvas.width / 2 + 50; 
-this.y = this.game.canvas.height / 2 ; 
-this.w = 5;
-this.h = 5;
+  this.game = game;
+  this.x = Math.floor(
+    Math.random() * (this.game.canvas.width - this.game.snake.w - 100)
+  );
+  this.y = Math.floor(
+    Math.random() * (this.game.canvas.height - this.game.snake.h - 100)
+  );
+  this.w = 8;
+  this.h = 8;
 }
 
 Item.prototype.draw = function() {

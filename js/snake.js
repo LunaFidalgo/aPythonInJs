@@ -6,16 +6,10 @@ var KEY_DOWN = 83; //para ir hacia abajo => con la S
 function Snake(game) {
   this.game = game;
 
-  /*
-  
-  x => necesitas el ancho => width
-  y => necesitas la altura => height
-  */
+  this.x = this.game.canvas.width / 2;
+  this.y = this.game.canvas.height / 2;
 
-  this.x = this.game.canvas.width / 2; //posicion x de la cabeza de la serpiente
-  this.y = this.game.canvas.height / 2; //posición y de la cabeza de la serpiente
-
-  this.w = 20; //ANCHO PROVISIONAL DE LA SERPIENTE
+  this.w = 20;
   this.h = 20;
   this.setListeners();
 
@@ -23,153 +17,197 @@ function Snake(game) {
     {
       x: this.x,
       y: this.y,
-      direction: this
-        .direction /*IDEA: que cada parte de la serpiente tenga una dirección*/
+      nextPos: []
+    },
+    {
+      x: this.x - this.w,
+      y: this.y,
+      nextPos: [this.x, this.y]
+    },
+    {
+      x: this.x - this.w * 2,
+      y: this.y,
+      nextPos: [this.x - this.w, this.y]
     }
   ];
+  this.direction = "RIGHT";
 
-  this.breakpoint = [];
+  this.speed = 100;
 
-  this.direction; //variable para reflejar la dirección hacia la que esta moviendose
-  //la cabeza de la serpiente
+  this.disease = false;
 }
 
 Snake.prototype.setListeners = function() {
   document.onkeydown = function(event) {
     switch (event.keyCode) {
       case KEY_RIGHT:
-        this.body[0].direction = "RIGHT";
+        if (this.direction === "LEFT") {
+          //this.direction = "RIGHT";
+          clearInterval(this.game.intervalId);
+        }
+        if (this.disease) {
+          this.direction = "LEFT";
+        } else {
+          this.direction = "RIGHT";
+        }
 
         break;
 
       case KEY_DOWN:
-        this.direction = "DOWN";
+        if (this.disease === "UP") {
+          //this.direction = "DOWN";
+          clearInterval(this.game.intervalId);
+        }
+        if (this.disease) {
+          this.direction = "UP";
+        } else {
+          this.direction = "DOWN";
+        }
+
         break;
 
       case KEY_UP:
-        this.body[0].direction = "UP";
+        if (this.direction === "DOWN") {
+          // this.direction = "UP";
+          clearInterval(this.game.intervalId);
+        }
+
+        if (this.disease) {
+          this.direction = "DOWN";
+        } else {
+          this.direction = "UP";
+        }
         break;
 
       case KEY_LEFT:
-        this.direction = "LEFT";
+        if (this.direction === "RIGHT") {
+          // this.direction = "LEFT";
+          clearInterval(this.game.intervalId);
+        }
+        if (this.disease) {
+          this.direction = "RIGHT";
+        } else {
+          this.direction = "LEFT";
+        }
         break;
     }
   }.bind(this);
 };
 
 Snake.prototype.draw = function() {
-  /**/
-
   for (var i = 0; i < this.body.length; i++) {
-    // this.game.ctx.fillStyle= "black";
+    this.game.ctx.fillStyle = "black";
     this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
-    // this.game.ctx.fillStyle= "#FF0000";
   }
+};
+
+Snake.prototype.heredaMove = function(i) {
+  this.body[i + 1].nextPos[0] = this.body[i].x;
+  this.body[i + 1].nextPos[1] = this.body[i].y;
 };
 
 Snake.prototype.move = function() {
   for (var i = 0; i < this.body.length; i++) {
-    switch (this.body[i].direction) {
-      case "RIGHT":
-        this.body[i].x = this.body[i].x + this.w;
-
-        break;
-      /*
-      if (this.x <= this.game.canvas.width) {
-        this.x = this.x + 10;
-        break;
-      } else {
-        this.x = 0;
-      }*/
-
-      case "DOWN":
-        this.y = this.y + 10;
-        break;
-
-      case "UP":
-        this.body[i].y = this.body[i].y - this.w;
-        break;
-
-      /*
-      this.y = this.y - 10;
-      break;
-*/
-      case "LEFT":
-        if (this.x >= 0) {
-          this.x = this.x - 10;
-          break;
-        } else {
-          this.x = this.x + this.game.canvas.width;
-        }
-
-        this.x = this.x - 10;
-        break;
+    if (i < this.body.length - 1) {
+      this.heredaMove(i);
     }
-  }
-  this.heredaMove();
-};
 
+    if (i > 0) {
+      this.body[i].x = this.body[i].nextPos[0];
+      this.body[i].y = this.body[i].nextPos[1];
+    } else {
+      this.collision();
+      switch (this.direction) {
+        case "RIGHT":
+          this.body[0].x = this.body[0].x + this.w;
+          if (this.body[0].x >= this.game.canvas.width - this.w)
+            clearInterval(this.game.intervalId);
 
+          break;
 
-Snake.prototype.heredaMove = function() {
+        case "UP":
+          this.body[0].y = this.body[0].y - this.h;
+          if (this.body[0].y < 1) clearInterval(this.game.intervalId);
+          break;
 
-    for (var i = 1; i < this.body.length; i++) {
-      this.body[i].x = this.body[i - 1].x;
-      this.body[i].y = this.body[i - 1].y;
-  }
-};
+        case "LEFT":
+          this.body[0].x = this.body[0].x - this.w;
+          if (this.body[0].x < 1) clearInterval(this.game.intervalId);
 
+          break;
 
-
-
-Snake.prototype.movePruebas = function() {
-  //IDEA: break point de giro
-  /**/
-
-  if (
-    this.body.length > 1 &&
-    this.body[0].direction != this.body[1].direction
-  ) {
-    //ha habido un cambio de dirección => establecemos breakpoint de giro
-    console.log("ha habido un cambio de dirección");
-
-    this.body[i].direction = this.body[i - 1].direction;
-
-    this.breakpoint.push({ x: this.body[0].x, y: this.body[0].y });
-    console.log(this.breakpoint);
-    //  console.log(this.body[0].x, this.body[0].y);
-    // console.log(this.breakpoint);
-  }
-
-  for (var i = 1; i < this.body.length; i++) {
-    // if(this.body[0].direction == "RIGHT" && this.body[i].direction == "UP"){
-    //   console.log("CASO QUE QUIERES REFLEJAR")
-    //   console.log(this.body[i].direction)
-    //   this.body[i].direction = this.body[i - 1].direction;
-    // }
-    if (
-      this.breakpoint.length != 0 &&
-      this.body[i].x == this.breakpoint[0].x &&
-      Math.abs(this.body[i].y - this.w) == this.breakpoint[0].y
-    ) {
-      console.log("PASO POR EL BREAKPOINT----");
-      //  this.body[i].direction = this.body[i - 1].direction;
-      if (i === this.body.length - 1) {
-        console.log("LIMPIAMOS EL BREAKPOINT");
-        //el ultimo ha pasado por el breakpoint
-        this.breakpoint = [];
+        case "DOWN":
+          this.body[0].y = this.body[0].y + this.h;
+          if (this.body[0].y >= this.game.canvas.height - this.h)
+            clearInterval(this.game.intervalId);
       }
     }
   }
 };
 
+Snake.prototype.collision = function() {
+  //colision consigo misma
+
+  for (var i = 1; i < this.body.length; i++) {
+    if (
+      this.body[0].x < this.body[i].x + this.w &&
+      this.body[0].x + this.w > this.body[i].x &&
+      this.body[0].y < this.body[i].y + this.h &&
+      this.body[0].y + this.h > this.body[i].y
+    ) {
+      console.log("HE COLISIONADO CONMIGO MISMA");
+      clearInterval(this.game.intervalId);
+    }
+  }
+};
+
 Snake.prototype.grow = function() {
-  if (this.body[0].direction == "RIGHT") {
-    this.body.push({
-      x: this.x + this.w * this.body.length,
-      y: this.y,
-      direction: "RIGHT"
-    });
-  } else if (this.body[0].direction == "UP") {
+  switch (this.direction) {
+    case "RIGHT":
+      this.body.push({
+        x: this.body[this.body.length - 1].x - this.w * this.body.length,
+        y: this.body[this.body.length - 1].y,
+        nextPos: [
+          this.body[this.body.length - 1].x,
+          this.body[this.body.length - 1].y
+        ]
+      });
+      break;
+
+    case "UP":
+      this.body.push({
+        x: this.body[this.body.length - 1].x,
+        y: this.body[this.body.length - 1].y - this.h,
+
+        nextPos: [
+          this.body[this.body.length - 1].x,
+          this.body[this.body.length - 1].y
+        ]
+      });
+
+      break;
+
+    case "LEFT":
+      this.body.push({
+        x: this.body[this.body.length - 1].x - this.w,
+        y: this.body[this.body.length - 1].y,
+
+        nextPos: [
+          this.body[this.body.length - 1].x,
+          this.body[this.body.length - 1].y
+        ]
+      });
+      break;
+
+    case "DOWN":
+      this.body.push({
+        x: this.body[this.body.length - 1].x,
+        y: this.body[this.body.length - 1].y + this.h,
+        nextPos: [
+          this.body[this.body.length - 1].x,
+          this.body[this.body.length - 1].y
+        ]
+      });
+      break;
   }
 };

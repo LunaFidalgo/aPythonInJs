@@ -1,20 +1,21 @@
 function Item(game, type) {
   this.game = game;
 
-  this.w = 15;
-  this.h = 15;
+  this.w = 20;
+  this.h = 20;
 
   this.generate(type);
   this.position();
 }
 
 Item.prototype.position = function() {
-  var randomPosX = Math.floor(
-    20 + Math.random() * (this.game.canvas.width - this.game.snake.w - 150)
-  );
-  var randomPosY = Math.floor(
-    20 + Math.random() * (this.game.canvas.height - this.game.snake.h - 150)
-  );
+
+  var randomPosX =  Math.floor(Math.random() * 
+  (this.game.canvas.width/this.w)) *20
+
+  var randomPosY =  Math.floor(Math.random() * 
+  (this.game.canvas.height/this.h)) *20
+
 
   var control;
 
@@ -40,6 +41,7 @@ Item.prototype.position = function() {
 };
 
 Item.prototype.draw = function(e) {
+  //this.game.ctx.fillStyle = "red";
   this.game.ctx.fillStyle = "rgba(0,0,0,0)";
   this.game.ctx.fillRect(e.x, e.y, e.w, e.h);
   this.game.ctx.fillStyle = e.color;
@@ -55,7 +57,7 @@ Item.prototype.generate = function(type) {
     this.code = "$";
   } else {
     var random = Math.floor(Math.random() * 3);
-// TODO : OBJECT FOR TIPO OF ITEMS
+    // TODO : OBJECT FOR TIPO OF ITEMS
     switch (random) {
       case 0:
         this.type = "disease";

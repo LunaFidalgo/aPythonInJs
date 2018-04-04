@@ -1,7 +1,7 @@
 var KEY_LEFT = 65;
-var KEY_RIGHT = 68; 
-var KEY_UP = 87; 
-var KEY_DOWN = 83; 
+var KEY_RIGHT = 68;
+var KEY_UP = 87;
+var KEY_DOWN = 83;
 
 function Snake(game) {
   this.game = game;
@@ -11,7 +11,6 @@ function Snake(game) {
 
   this.w = 20;
   this.h = 20;
- 
 
   this.body = [
     {
@@ -19,7 +18,9 @@ function Snake(game) {
       y: this.y,
       nextPos: [],
       //HISTORICO DEL RETROCESO
-      logPos: [{x: this.game.canvas.height / 2, y: this.game.canvas.height / 2}]
+      logPos: [
+        { x: this.game.canvas.height / 2, y: this.game.canvas.height / 2 }
+      ]
     },
     {
       x: this.x - this.w,
@@ -46,7 +47,7 @@ Snake.prototype.setListeners = function() {
       case KEY_RIGHT:
         if (this.direction === "LEFT") {
           //this.direction = "RIGHT";
-          clearInterval(this.game.intervalId);
+          this.game.gameOver();
         }
         if (this.disease) {
           this.direction = "LEFT";
@@ -59,7 +60,7 @@ Snake.prototype.setListeners = function() {
       case KEY_DOWN:
         if (this.disease === "UP") {
           //this.direction = "DOWN";
-          clearInterval(this.game.intervalId);
+          this.game.gameOver();
         }
         if (this.disease) {
           this.direction = "UP";
@@ -72,7 +73,7 @@ Snake.prototype.setListeners = function() {
       case KEY_UP:
         if (this.direction === "DOWN") {
           // this.direction = "UP";
-          clearInterval(this.game.intervalId);
+          this.game.gameOver();
         }
 
         if (this.disease) {
@@ -85,7 +86,7 @@ Snake.prototype.setListeners = function() {
       case KEY_LEFT:
         if (this.direction === "RIGHT") {
           // this.direction = "LEFT";
-          clearInterval(this.game.intervalId);
+          this.game.gameOver();
         }
         if (this.disease) {
           this.direction = "RIGHT";
@@ -124,33 +125,32 @@ Snake.prototype.move = function() {
         case "RIGHT":
           this.body[0].x = this.body[0].x + this.w;
           if (this.body[0].x >= this.game.canvas.width - this.w)
-            clearInterval(this.game.intervalId);
+            this.game.gameOver();
 
           break;
 
         case "UP":
           this.body[0].y = this.body[0].y - this.h;
-          if (this.body[0].y < 1) clearInterval(this.game.intervalId);
+          if (this.body[0].y < 1) this.game.gameOver();
           break;
 
         case "LEFT":
           this.body[0].x = this.body[0].x - this.w;
-          if (this.body[0].x < 1) clearInterval(this.game.intervalId);
+          if (this.body[0].x < 1) this.game.gameOver();
 
           break;
 
         case "DOWN":
           this.body[0].y = this.body[0].y + this.h;
           if (this.body[0].y >= this.game.canvas.height - this.h)
-            clearInterval(this.game.intervalId);
+            this.game.gameOver();
       }
     }
   }
-  this.body[0].logPos.push({x: this.body[0].x, y: this.body[0].y})
+  this.body[0].logPos.push({ x: this.body[0].x, y: this.body[0].y });
 };
 // TODO : FUSION BOTH COLLISION
 Snake.prototype.collision = function() {
-
   for (var i = 1; i < this.body.length; i++) {
     if (
       this.body[0].x < this.body[i].x + this.w &&
@@ -158,7 +158,6 @@ Snake.prototype.collision = function() {
       this.body[0].y < this.body[i].y + this.h &&
       this.body[0].y + this.h > this.body[i].y
     ) {
-      
       clearInterval(this.game.intervalId);
     }
   }

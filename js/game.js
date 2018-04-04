@@ -32,7 +32,7 @@ Game.prototype.start = function() {
       this.items.forEach(function(e) {
         e.draw(e);
       });
-// TO REFACTOR DONT TOUCH
+// TODO: REFACTOR DONT TOUCH
       this.items.forEach(
         function(e, i) {
           if (this.itemEaten(e)) {
@@ -102,3 +102,12 @@ Game.prototype.itemEaten = function(item) {
     return false;
   }
 };
+
+
+Game.prototype.gameOver = function(){
+  
+  
+  this.ctx.font = "50px 'Press Start 2P'";
+  this.ctx.fillText("GAME OVER", (this.canvas.width/2)-200, this.canvas.height/2);
+  clearInterval(this.intervalId);
+}

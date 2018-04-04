@@ -1,21 +1,22 @@
 function Item(game, type) {
   this.game = game;
+  this.data = this.generate(type);
+  this.w = this.data.w || 20;
+  this.h = this.data.h || 20;
+  this.type = this.data.type;
+  this.points = this.data.points;
+  this.color = this.data.color;
+  this.code = this.data.code;
 
-  this.w = 20;
-  this.h = 20;
-
-  this.generate(type);
+  //this.generate(type);
   this.position();
 }
 
 Item.prototype.position = function() {
-
-  var randomPosX =  Math.floor(Math.random() * 
-  (this.game.canvas.width/this.w)) *20
-
-  var randomPosY =  Math.floor(Math.random() * 
-  (this.game.canvas.height/this.h)) *20
-
+  var randomPosX =
+    Math.floor(Math.random() * (this.game.canvas.width / this.w)) * 20;
+  var randomPosY =
+    Math.floor(Math.random() * (this.game.canvas.height / this.h)) * 20;
 
   var control;
 
@@ -32,6 +33,7 @@ Item.prototype.position = function() {
       control = true;
     }
   });
+
   if (control) {
     this.x = randomPosX;
     this.y = randomPosY;
@@ -51,35 +53,21 @@ Item.prototype.draw = function(e) {
 
 Item.prototype.generate = function(type) {
   if (typeof type == "string") {
-    this.type = "normal";
-    this.points = 10;
-    this.color = "#fd5f00";
-    this.code = "$";
+    return _normal;
   } else {
     var random = Math.floor(Math.random() * 3);
-    // TODO : OBJECT FOR TIPO OF ITEMS
+
     switch (random) {
       case 0:
-        this.type = "disease";
-        this.points = 100;
-        this.color = "yellow";
-        this.code = "NaN";
-        this.w = 48;
-        this.h = 20;
+        return _item0;
         break;
-
+        
       case 1:
-        this.type = "speed-up";
-        this.points = 30;
-        this.color = "#ef1fad";
-        this.code = "1";
+        return _item1;
         break;
 
       case 2:
-        this.type = "slow";
-        this.points = 20;
-        this.color = "#1f45ef";
-        this.code = "0";
+        return _item2;
         break;
     }
   }

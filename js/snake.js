@@ -1,5 +1,3 @@
-
-
 function Snake(game) {
   this.game = game;
 
@@ -10,9 +8,9 @@ function Snake(game) {
   this.h = 20;
 
   this.body = [
-    {x: this.x, y: this.y},
-    {x: this.x - this.w, y: this.y},
-    {x: this.x - this.w * 2, y: this.y}
+    { x: this.x, y: this.y },
+    { x: this.x - this.w, y: this.y },
+    { x: this.x - this.w * 2, y: this.y }
   ];
   this.length = 3;
 
@@ -87,23 +85,33 @@ Snake.prototype.draw = function() {
   }
 };
 
+Snake.prototype.drawBackwards = function() {
+  debugger;
+  for (var i = this.body.length-1; i > 0; i--) {
+    this.game.ctx.fillStyle = "#1fef61";
+    this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
+  }
+  
+};
+
 Snake.prototype.move = function() {
   this.collision();
+  this.infinitLimites(this.direction);
   switch (this.direction) {
     case "RIGHT":
-       newMove = { x: this.body[0].x + this.w, y: this.body[0].y };
+      newMove = { x: this.body[0].x + this.w, y: this.body[0].y };
       break;
 
     case "UP":
-       newMove = { x: this.body[0].x, y: this.body[0].y - this.h };
+      newMove = { x: this.body[0].x, y: this.body[0].y - this.h };
       break;
 
     case "LEFT":
-       newMove = { x: this.body[0].x - this.w, y: this.body[0].y };
+      newMove = { x: this.body[0].x - this.w, y: this.body[0].y };
       break;
 
     case "DOWN":
-       newMove = { x: this.body[0].x, y: this.body[0].y + this.h };
+      newMove = { x: this.body[0].x, y: this.body[0].y + this.h };
       break;
   }
   this.body.unshift(newMove);
@@ -126,7 +134,29 @@ Snake.prototype.grow = function() {
   this.length++;
 };
 
-Snake.prototype.infinitLimites = function (){
+Snake.prototype.infinitLimites = function() {
+  switch (this.direction) {
+    case "RIGHT":
+      if (this.body[0].x + this.w > this.game.canvas.width) {
+        this.body[0].x = 0;
+      }
+      break;
+    case "LEFT":
+      if (this.body[0].x - this.w < -20) {
+        this.body[0].x = this.game.canvas.width;
+      }
+      break;
 
-  
-}
+    case "UP":
+      if (this.body[0].y - this.h < -20) {
+        this.body[0].y = this.game.canvas.height;
+      }
+      break;
+
+    case "DOWN":
+      if (this.body[0].y + this.h > this.game.canvas.height) {
+        this.body[0].y = 0;
+      }
+      break;
+  }
+};

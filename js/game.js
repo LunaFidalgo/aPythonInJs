@@ -116,6 +116,9 @@ Game.prototype.drawAll = function() {
 };
 
 Game.prototype.gameOver = function() {
+this.snake.drawBackwards();
+
+  
   this.ctx.font = "50px 'Press Start 2P'";
   this.ctx.fillText(
     "GAME OVER",

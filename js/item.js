@@ -40,8 +40,6 @@ Item.prototype.position = function() {
 };
 
 Item.prototype.draw = function(e) {
-  debugger;
-  //this.game.ctx.fillStyle = "#c92323";
   this.game.ctx.fillStyle = "rgba(0,0,0,0)";
   this.game.ctx.fillRect(e.x, e.y, e.w, e.h);
   this.game.ctx.fillStyle = e.color;
@@ -50,7 +48,6 @@ Item.prototype.draw = function(e) {
 };
 
 Item.prototype.generate = function(type) {
-  console.log(typeof type);
   if (typeof type == "string") {
     this.type = "normal";
     this.points = 10;
@@ -58,6 +55,7 @@ Item.prototype.generate = function(type) {
     this.code = "$";
   } else {
     var random = Math.floor(Math.random() * 3);
+// TODO : OBJECT FOR TIPO OF ITEMS
     switch (random) {
       case 0:
         this.type = "disease";

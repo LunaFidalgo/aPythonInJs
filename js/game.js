@@ -1,8 +1,6 @@
 
 function Game(canvasId) {
   this.canvas = document.getElementById(canvasId);
- // this.canvas.width = window.innerWidth - 20; 
-//  this.canvas.height = window.innerHeight - 20; 
   this.ctx = this.canvas.getContext("2d");
   this.snake = new Snake(this);
   this.score = 0;
@@ -34,11 +32,10 @@ Game.prototype.start = function() {
       this.items.forEach(function(e) {
         e.draw(e);
       });
-
+// TO REFACTOR DONT TOUCH
       this.items.forEach(
         function(e, i) {
           if (this.itemEaten(e)) {
-            debugger
             this.snake.disease = false; 
             
             switch (e.type) {
@@ -76,7 +73,6 @@ Game.prototype.start = function() {
 };
 
 Game.prototype.generateItem = function(tipo) {
-  //función para generar cada item
   var item = new Item(this, tipo);
   this.items.push(item);
 };
@@ -96,13 +92,8 @@ Game.prototype.clear = function() {
 
 Game.prototype.itemEaten = function(item) {
   if (
-    /*condicion para coincidencia de las x (si solo estuviera esta
-   cuando estuviera en el mismo punto del eje x, pero diferente en el y, saltaria) */
     this.snake.body[0].x < item.x + item.w &&
     this.snake.body[0].x + this.snake.w > item.x &&
-    /*condición para la coincidencia de las y (si solo estuviera esta, cuando estuvieran 
-      en el mismo punto del eje y, pero diferente en el x, saltaría)*/
-
     this.snake.body[0].y < item.y + item.h &&
     this.snake.body[0].y + this.snake.h > item.y
   ) {

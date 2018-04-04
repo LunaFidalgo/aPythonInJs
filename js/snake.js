@@ -1,7 +1,7 @@
-var KEY_LEFT = 65; //para mover a la izquierda => con la A
-var KEY_RIGHT = 68; //para mover a la derecha (avanzar) => la D
-var KEY_UP = 87; //para mover hacia arriba => la W
-var KEY_DOWN = 83; //para ir hacia abajo => con la S
+var KEY_LEFT = 65;
+var KEY_RIGHT = 68; 
+var KEY_UP = 87; 
+var KEY_DOWN = 83; 
 
 function Snake(game) {
   this.game = game;
@@ -17,7 +17,9 @@ function Snake(game) {
     {
       x: this.x,
       y: this.y,
-      nextPos: []
+      nextPos: [],
+      //HISTORICO DEL RETROCESO
+      logPos: [{x: this.game.canvas.height / 2, y: this.game.canvas.height / 2}]
     },
     {
       x: this.x - this.w,
@@ -144,10 +146,10 @@ Snake.prototype.move = function() {
       }
     }
   }
+  this.body[0].logPos.push({x: this.body[0].x, y: this.body[0].y})
 };
-
+// TODO : FUSION BOTH COLLISION
 Snake.prototype.collision = function() {
-  //colision consigo misma
 
   for (var i = 1; i < this.body.length; i++) {
     if (

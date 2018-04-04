@@ -58,7 +58,7 @@ Snake.prototype.setListeners = function() {
         break;
 
       case KEY_DOWN:
-        if (this.disease === "UP") {
+        if (this.direction === "UP") {
           //this.direction = "DOWN";
           this.game.gameOver();
         }
@@ -72,6 +72,7 @@ Snake.prototype.setListeners = function() {
 
       case KEY_UP:
         if (this.direction === "DOWN") {
+          
           // this.direction = "UP";
           this.game.gameOver();
         }

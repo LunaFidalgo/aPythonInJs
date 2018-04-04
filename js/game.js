@@ -1,7 +1,8 @@
-/*Clase que representa el juego*/
 
 function Game(canvasId) {
   this.canvas = document.getElementById(canvasId);
+ // this.canvas.width = window.innerWidth - 20; 
+//  this.canvas.height = window.innerHeight - 20; 
   this.ctx = this.canvas.getContext("2d");
   this.snake = new Snake(this);
   this.score = 0;
@@ -37,6 +38,9 @@ Game.prototype.start = function() {
       this.items.forEach(
         function(e, i) {
           if (this.itemEaten(e)) {
+            debugger
+            this.snake.disease = false; 
+            
             switch (e.type) {
               case "speed-up":
                 this.snake.speed = 50;
@@ -45,6 +49,8 @@ Game.prototype.start = function() {
 
               case "disease":
                 this.snake.disease = true;
+                this.snake.speed = 100; 
+                this.start();
                 break;
 
               case "slow":
@@ -54,7 +60,6 @@ Game.prototype.start = function() {
 
               case "normal":
                 this.snake.speed = 100;
-                this.snake.disease = false;
                 this.start();
                 break;
             }
@@ -77,8 +82,13 @@ Game.prototype.generateItem = function(tipo) {
 };
 
 Game.prototype.generateScore = function() {
-  document.getElementById("score").innerHTML = this.score + " " + "Points";
-};
+ var score =  document.createElement("h1")
+ score.setAttribute("id","points")
+ score.innerHTML = "Score: "+""+this.score;
+ var divScore =  document.getElementById("score")
+ divScore.removeChild(document.getElementById("points"));
+ divScore.appendChild(score);
+}
 
 Game.prototype.clear = function() {
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -101,8 +111,3 @@ Game.prototype.itemEaten = function(item) {
     return false;
   }
 };
-
-/////////////////////////////////////////////////////////////////////////////////
-///////////////////// COLISIONES GÉNERICAS //////////////////////////////////////
-/*if (object1.x < object2.x + object2.width && object1.x + object1.width > object2.x &&
-  object1.y < object2.y + object2.height && object1.y + object1.height > object2.y) { }*/

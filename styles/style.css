@@ -1,3 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
 #my-canvas{
-  border: 1px solid black;
+  border: 1px solid #1fef61;
 }
+
+.center{
+  margin: 0 auto; 
+}
+
+.full-screen{
+  width: 100%; 
+  height: 100%;
+}
+
+canvas{
+  position: relatv; 
+}
+
+body{
+   background-color: black;
+ }
+
+ #points{
+   color: #1fef61; 
+ }
+
+
+ #points {
+  font-family: 'Press Start 2P'; 
+  font-size: 25px; 
+ }

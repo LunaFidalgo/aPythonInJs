@@ -11,7 +11,7 @@ function Snake(game) {
 
   this.w = 20;
   this.h = 20;
-  this.setListeners();
+ 
 
   this.body = [
     {
@@ -30,11 +30,12 @@ function Snake(game) {
       nextPos: [this.x - this.w, this.y]
     }
   ];
+
   this.direction = "RIGHT";
-
   this.speed = 100;
-
   this.disease = false;
+
+  this.setListeners();
 }
 
 Snake.prototype.setListeners = function() {
@@ -96,7 +97,7 @@ Snake.prototype.setListeners = function() {
 
 Snake.prototype.draw = function() {
   for (var i = 0; i < this.body.length; i++) {
-    this.game.ctx.fillStyle = "black";
+    this.game.ctx.fillStyle = "#1fef61";
     this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
   }
 };
@@ -155,7 +156,7 @@ Snake.prototype.collision = function() {
       this.body[0].y < this.body[i].y + this.h &&
       this.body[0].y + this.h > this.body[i].y
     ) {
-      console.log("HE COLISIONADO CONMIGO MISMA");
+      
       clearInterval(this.game.intervalId);
     }
   }

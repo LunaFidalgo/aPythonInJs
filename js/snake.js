@@ -15,7 +15,7 @@ function Snake(game) {
   this.length = 3;
 
   this.direction = "RIGHT";
-  this.speed = 100;
+  this.speed = SNAKE_SPEED;
   this.disease = false;
 
   this.setListeners();
@@ -29,12 +29,8 @@ Snake.prototype.setListeners = function() {
           //this.direction = "RIGHT";
           this.game.gameOver();
         }
-        if (this.disease) {
-          this.direction = "LEFT";
-        } else {
-          this.direction = "RIGHT";
-        }
-
+        if (this.disease) this.direction = "LEFT";
+        else this.direction = "RIGHT";
         break;
 
       case KEY_DOWN:
@@ -42,12 +38,8 @@ Snake.prototype.setListeners = function() {
           //this.direction = "DOWN";
           this.game.gameOver();
         }
-        if (this.disease) {
-          this.direction = "UP";
-        } else {
-          this.direction = "DOWN";
-        }
-
+        if (this.disease) this.direction = "UP";
+        else this.direction = "DOWN";
         break;
 
       case KEY_UP:
@@ -56,11 +48,8 @@ Snake.prototype.setListeners = function() {
           this.game.gameOver();
         }
 
-        if (this.disease) {
-          this.direction = "DOWN";
-        } else {
-          this.direction = "UP";
-        }
+        if (this.disease) this.direction = "DOWN";
+        else this.direction = "UP";
         break;
 
       case KEY_LEFT:
@@ -68,11 +57,8 @@ Snake.prototype.setListeners = function() {
           // this.direction = "LEFT";
           this.game.gameOver();
         }
-        if (this.disease) {
-          this.direction = "RIGHT";
-        } else {
-          this.direction = "LEFT";
-        }
+        if (this.disease) this.direction = "RIGHT";
+        else this.direction = "LEFT";
         break;
     }
   }.bind(this);
@@ -80,18 +66,27 @@ Snake.prototype.setListeners = function() {
 
 Snake.prototype.draw = function() {
   for (var i = 0; i < this.length; i++) {
-    this.game.ctx.fillStyle = "#1fef61";
+    this.game.ctx.fillStyle = SNAKE_COLOR;
     this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
   }
 };
 
 Snake.prototype.drawBackwards = function() {
-  debugger;
-  for (var i = this.body.length-1; i > 0; i--) {
-    this.game.ctx.fillStyle = "#1fef61";
-    this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
+  for (var i = 0; i < this.body.length - 1; i += 3) {
+    for (var j = 0; j < 3 - 1; j++) {
+      this.game.ctx.fillStyle = "#1fef61";
+      this.game.ctx.fillRect(
+        this.body[i + j].x,
+        this.body[i + j].y,
+        this.w,
+        this.h
+      );
+      debugger;
+      this.body.unshift();
+    }
+
+    // this.game.clear();
   }
-  
 };
 
 Snake.prototype.move = function() {

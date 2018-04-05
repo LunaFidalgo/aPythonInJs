@@ -14,9 +14,9 @@ function Item(game, type) {
 
 Item.prototype.position = function() {
   var randomPosX =
-    Math.floor(Math.random() * (this.game.canvas.width / this.w)) * 20;
+    Math.ceil(Math.random() * (this.game.canvas.width / this.w)) * 20;
   var randomPosY =
-    Math.floor(Math.random() * (this.game.canvas.height / this.h)) * 20;
+    Math.ceil(Math.random() * (this.game.canvas.height / this.h)) * 20;
 
   var control;
 
@@ -53,21 +53,21 @@ Item.prototype.draw = function(e) {
 
 Item.prototype.generate = function(type) {
   if (typeof type == "string") {
-    return _normal;
+    return ITEM_NORMAL;
   } else {
     var random = Math.floor(Math.random() * 3);
 
     switch (random) {
       case 0:
-        return _item0;
+        return ITEM_DISEASE;
         break;
         
       case 1:
-        return _item1;
+        return ITEM_SPEEDUP;
         break;
 
       case 2:
-        return _item2;
+        return ITEM_SLOW;
         break;
     }
   }

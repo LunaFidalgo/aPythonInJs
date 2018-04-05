@@ -37,27 +37,24 @@ Game.prototype.start = function() {
 
 Game.prototype.itemEffect = function(type) {
   switch (type) {
+    case "normal":
+      this.snake.speed = ITEM_NORMAL.snake_speed;
+      break;
+
     case "speed-up":
-      this.snake.speed = 50;
-      this.start();
+      this.snake.speed = ITEM_SPEEDUP.snake_speed;
       break;
 
     case "disease":
       this.snake.disease = true;
-      this.snake.speed = 100;
-      this.start();
+      this.snake.speed = ITEM_DISEASE.snake_speed;
       break;
 
     case "slow":
-      this.snake.speed = 200;
-      this.start();
-      break;
-
-    case "normal":
-      this.snake.speed = 100;
-      this.start();
+      this.snake.speed = ITEM_SLOW.snake_speed;
       break;
   }
+  this.start();
 };
 
 Game.prototype.generateItem = function() {
@@ -116,9 +113,8 @@ Game.prototype.drawAll = function() {
 };
 
 Game.prototype.gameOver = function() {
-this.snake.drawBackwards();
-
   
+  this.snake.drawBackwards();
   this.ctx.font = "50px 'Press Start 2P'";
   this.ctx.fillText(
     "GAME OVER",

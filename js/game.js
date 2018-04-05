@@ -1,10 +1,12 @@
-function Game(canvasId) {
+function Game(canvasId, mode) {
   this.canvas = document.getElementById(canvasId);
   this.ctx = this.canvas.getContext("2d");
-  this.snake = new Snake(this);
+  this.mode = mode; 
+  this.canvas.style.backgroundColor = this.mode.background_color;
+  
   this.score = 0;
-
   this.items = [];
+  this.snake = new Snake(this);
 }
 
 Game.prototype.start = function() {
@@ -17,7 +19,7 @@ Game.prototype.start = function() {
       this.generateItem();
 
       this.drawAll();
-
+//ESTO MAS BONITO
       this.items.forEach(
         function(e, i) {
           if (this.itemEaten(e)) {
@@ -38,20 +40,20 @@ Game.prototype.start = function() {
 Game.prototype.itemEffect = function(type) {
   switch (type) {
     case "normal":
-      this.snake.speed = ITEM_NORMAL.snake_speed;
+      this.snake.speed = this.mode.ITEM_NORMAL.snake_speed;
       break;
 
     case "speed-up":
-      this.snake.speed = ITEM_SPEEDUP.snake_speed;
+      this.snake.speed = this.mode.ITEM_SPEEDUP.snake_speed;
       break;
 
     case "disease":
       this.snake.disease = true;
-      this.snake.speed = ITEM_DISEASE.snake_speed;
+      this.snake.speed = this.mode.ITEM_DISEASE.snake_speed;
       break;
 
     case "slow":
-      this.snake.speed = ITEM_SLOW.snake_speed;
+      this.snake.speed = this.mode.ITEM_SLOW.snake_speed;
       break;
   }
   this.start();
@@ -115,6 +117,12 @@ Game.prototype.drawAll = function() {
 Game.prototype.gameOver = function() {
   
   this.snake.drawBackwards();
+  if(this.mode.id === 0){
+   
+  }else if(this.mode.id === 1){
+    this.ctx.fillStyle = this.mode.gameOverColor;
+  }
+  
   this.ctx.font = "50px 'Press Start 2P'";
   this.ctx.fillText(
     "GAME OVER",

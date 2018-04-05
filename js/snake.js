@@ -15,7 +15,7 @@ function Snake(game) {
   this.length = 3;
 
   this.direction = "RIGHT";
-  this.speed = SNAKE_SPEED;
+  this.speed = this.game.mode.SNAKE_SPEED;
   this.disease = false;
 
   this.setListeners();
@@ -26,39 +26,50 @@ Snake.prototype.setListeners = function() {
     switch (event.keyCode) {
       case KEY_RIGHT:
         if (this.direction === "LEFT") {
-          //this.direction = "RIGHT";
-          this.game.gameOver();
+          if (this.game.mode.id === 1) {
+          } else if (this.game.mode.id === 0) {
+            this.game.gameOver();
+          }
+        } else {
+          if (this.disease) this.direction = "LEFT";
+          else this.direction = "RIGHT";
         }
-        if (this.disease) this.direction = "LEFT";
-        else this.direction = "RIGHT";
         break;
 
       case KEY_DOWN:
         if (this.direction === "UP") {
-          //this.direction = "DOWN";
-          this.game.gameOver();
+          if (this.game.mode.id === 1) {
+          } else if (this.game.mode.id === 0) {
+            this.game.gameOver();
+          }
+        } else {
+          if (this.disease) this.direction = "UP";
+          else this.direction = "DOWN";
         }
-        if (this.disease) this.direction = "UP";
-        else this.direction = "DOWN";
         break;
 
       case KEY_UP:
         if (this.direction === "DOWN") {
-          // this.direction = "UP";
-          this.game.gameOver();
+          if (this.game.mode.id === 1) {
+          } else if (this.game.mode.id === 0) {
+            this.game.gameOver();
+          }
+        } else {
+          if (this.disease) this.direction = "DOWN";
+          else this.direction = "UP";
         }
-
-        if (this.disease) this.direction = "DOWN";
-        else this.direction = "UP";
         break;
 
       case KEY_LEFT:
         if (this.direction === "RIGHT") {
-          // this.direction = "LEFT";
-          this.game.gameOver();
+          if (this.game.mode.id === 1) {
+          } else if (this.game.mode.id === 0) {
+            this.game.gameOver();
+          }
+        } else {
+          if (this.disease) this.direction = "RIGHT";
+          else this.direction = "LEFT";
         }
-        if (this.disease) this.direction = "RIGHT";
-        else this.direction = "LEFT";
         break;
     }
   }.bind(this);
@@ -66,32 +77,40 @@ Snake.prototype.setListeners = function() {
 
 Snake.prototype.draw = function() {
   for (var i = 0; i < this.length; i++) {
-    this.game.ctx.fillStyle = SNAKE_COLOR;
+    this.game.ctx.fillStyle = this.game.mode.SNAKE_COLOR;
     this.game.ctx.fillRect(this.body[i].x, this.body[i].y, this.w, this.h);
   }
 };
 
 Snake.prototype.drawBackwards = function() {
-  for (var i = 0; i < this.body.length - 1; i += 3) {
-    for (var j = 0; j < 3 - 1; j++) {
-      this.game.ctx.fillStyle = "#1fef61";
-      this.game.ctx.fillRect(
-        this.body[i + j].x,
-        this.body[i + j].y,
-        this.w,
-        this.h
-      );
-      debugger;
-      this.body.unshift();
-    }
-
-    // this.game.clear();
-  }
+      var toDraw = 0; 
+     setInterval(function(){
+  
+        this.game.clear();
+        if(toDraw+3 < this.body.length){
+          for(var i = 0; i< 3; i++){
+         
+            this.game.ctx.fillStyle = "#1fef61";
+            this.game.ctx.fillRect(
+            this.body[toDraw+i].x,
+            this.body[toDraw+i].y,
+            this.w,
+            this.h)
+          }
+          toDraw++;
+      }  
+      }.bind(this), 40)
+      
 };
 
 Snake.prototype.move = function() {
   this.collision();
-  this.infinitLimites(this.direction);
+  if (this.game.mode.id === 0) {
+    this.infinitLimites();
+  } else {
+    this.borderCollision();
+  }
+
   switch (this.direction) {
     case "RIGHT":
       newMove = { x: this.body[0].x + this.w, y: this.body[0].y };
@@ -136,6 +155,7 @@ Snake.prototype.infinitLimites = function() {
         this.body[0].x = 0;
       }
       break;
+
     case "LEFT":
       if (this.body[0].x - this.w < -20) {
         this.body[0].x = this.game.canvas.width;
@@ -154,4 +174,34 @@ Snake.prototype.infinitLimites = function() {
       }
       break;
   }
+};
+
+Snake.prototype.borderCollision = function() {
+  var control = true;
+  switch (this.direction) {
+    case "RIGHT":
+      if (this.body[0].x + this.w > this.game.canvas.width) {
+        control = false;
+      }
+      break;
+
+    case "LEFT":
+      if (this.body[0].x - this.w < 0) {
+        control = false;
+      }
+      break;
+
+    case "UP":
+      if (this.body[0].y - this.h < 0) {
+        control = false;
+      }
+      break;
+
+    case "DOWN":
+      if (this.body[0].y + this.h > this.game.canvas.height-20) {
+        control = false;
+      }
+      break;
+  }
+  if (!control) this.game.gameOver();
 };

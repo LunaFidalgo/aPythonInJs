@@ -1,6 +1,15 @@
-@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
-#my-canvas{
+@import url("https://fonts.googleapis.com/css?family=Press+Start+2P");
+
+#my-canvas {
+}
+
+.mode0 {
   border: 1px solid #1fef61;
+}
+
+.mode1 {
+  border: 1px solid #a3c23d
+    "
 }
 
 .center{
@@ -12,18 +21,23 @@
   height: 100%;
 }
 
-
-
 body{
    background-color: black;
  }
 
- #points{
-   color: #1fef61; 
- }
-
-
- #points {
+ .mode0-points{
   font-family: 'Press Start 2P'; 
   font-size: 25px; 
+  color: #1fef61; 
  }
+
+ .mode1-points{
+  font-family: 'Press Start 2P'; 
+  font-size: 25px; 
+  color :#A3C23D"
+}
+
+#points {
+  font-family: "Press Start 2P";
+  font-size: 25px;
+}

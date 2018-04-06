@@ -1,9 +1,9 @@
 function Game(canvasId, mode) {
   this.canvas = document.getElementById(canvasId);
   this.ctx = this.canvas.getContext("2d");
-  this.mode = mode; 
+  this.mode = mode;
   this.canvas.style.backgroundColor = this.mode.background_color;
-  
+
   this.score = 0;
   this.items = [];
   this.snake = new Snake(this);
@@ -19,7 +19,7 @@ Game.prototype.start = function() {
       this.generateItem();
 
       this.drawAll();
-//ESTO MAS BONITO
+      //ESTO MAS BONITO
       this.items.forEach(
         function(e, i) {
           if (this.itemEaten(e)) {
@@ -60,18 +60,24 @@ Game.prototype.itemEffect = function(type) {
 };
 
 Game.prototype.generateItem = function() {
-  if (this.items.length == 0) {
-    this.setItem("normal");
-  } else if (this.items.length < 2) {
-    this.items.forEach(
-      function(e) {
-        if (e.type != "normal") {
-          this.setItem("normal");
-        } else {
-          this.setItem();
-        }
-      }.bind(this)
-    );
+  if (this.mode.id === 0) {
+    if (this.items.length == 0) {
+      this.setItem("normal");
+    } else if (this.items.length < 2) {
+      this.items.forEach(
+        function(e) {
+          if (e.type != "normal") {
+            this.setItem("normal");
+          } else {
+            this.setItem();
+          }
+        }.bind(this)
+      );
+    }
+  } else {
+    if (this.items.length == 0) {
+      this.setItem("normal");
+    }
   }
 };
 
@@ -87,6 +93,12 @@ Game.prototype.generateScore = function(points) {
   score.innerHTML = "Score: " + "" + this.score;
   var divScore = document.getElementById("score");
   divScore.removeChild(document.getElementById("points"));
+
+  if (this.mode.id === 0) {
+    score.style.color = "#1fef61";
+  } else {
+    score.style.color = "#A3C23D";
+  }
   divScore.appendChild(score);
 };
 
@@ -115,19 +127,18 @@ Game.prototype.drawAll = function() {
 };
 
 Game.prototype.gameOver = function() {
-  
+  this.ctx.fillStyle = this.mode.SNAKE_COLOR;
   this.snake.drawBackwards();
-  if(this.mode.id === 0){
-   
-  }else if(this.mode.id === 1){
-    this.ctx.fillStyle = this.mode.gameOverColor;
-  }
-  
+
+  clearInterval(this.intervalId);
+};
+
+Game.prototype.drawGameOver = function() {
   this.ctx.font = "50px 'Press Start 2P'";
+  this.ctx.fillStyle = this.mode.gameOverColor;
   this.ctx.fillText(
     "GAME OVER",
     this.canvas.width / 2 - 200,
     this.canvas.height / 2
   );
-  clearInterval(this.intervalId);
 };

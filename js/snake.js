@@ -83,24 +83,28 @@ Snake.prototype.draw = function() {
 };
 
 Snake.prototype.drawBackwards = function() {
-      var toDraw = 0; 
-     setInterval(function(){
-  
-        this.game.clear();
-        if(toDraw+3 < this.body.length){
-          for(var i = 0; i< 3; i++){
-         
-            this.game.ctx.fillStyle = "#1fef61";
-            this.game.ctx.fillRect(
-            this.body[toDraw+i].x,
-            this.body[toDraw+i].y,
+  var toDraw = 0;
+
+  setInterval(
+    function() {
+      this.game.clear();
+      if (toDraw + 3 < this.body.length) {
+        for (var i = 0; i < 3; i++) {
+          this.game.ctx.fillRect(
+            this.body[toDraw + i].x,
+            this.body[toDraw + i].y,
             this.w,
-            this.h)
-          }
-          toDraw++;
-      }  
-      }.bind(this), 40)
-      
+            this.h
+          );
+        }
+        toDraw++;
+      } else {
+        //resolviendo asincronia
+        this.game.drawGameOver();
+      }
+    }.bind(this),
+    40
+  );
 };
 
 Snake.prototype.move = function() {
@@ -180,7 +184,7 @@ Snake.prototype.borderCollision = function() {
   var control = true;
   switch (this.direction) {
     case "RIGHT":
-      if (this.body[0].x + this.w > this.game.canvas.width) {
+      if (this.body[0].x + this.w > this.game.canvas.width - 20) {
         control = false;
       }
       break;
@@ -198,7 +202,7 @@ Snake.prototype.borderCollision = function() {
       break;
 
     case "DOWN":
-      if (this.body[0].y + this.h > this.game.canvas.height-20) {
+      if (this.body[0].y + this.h > this.game.canvas.height - 20) {
         control = false;
       }
       break;

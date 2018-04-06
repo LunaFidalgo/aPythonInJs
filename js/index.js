@@ -33,11 +33,10 @@ function landingPage(MyCanvas) {
     ctx.drawImage(img, 50, 200, 150, 150);
   };
 
-  ctx.fillText("MODE FREAK ", 400, 150);
+  ctx.fillText("FREAK MODE", 400, 150);
   ctx.fillText("PRESS P ", 400, 300);
 
-  ctx.fillText("MODE NORMAL ", 700, 150);
+  ctx.fillText("NORMAL MODE", 700, 150);
   ctx.fillText("PRESS L ", 700, 300);
 
-  // ctx.fillText("A: ", 20,  MyCanvas.height / 2+30)
 }

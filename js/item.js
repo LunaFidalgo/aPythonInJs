@@ -21,14 +21,17 @@ Item.prototype.position = function() {
   var control;
 
   this.game.snake.body.forEach(function(e) {
-    if (randomPosX === e.x) { control = false} 
+    if (randomPosX === e.x || randomPosX >= this.game.canvas.width || randomPosX <=0 )
+      { control = false} 
     else { control = true }
 
-    if (randomPosY === e.y) { control = false} 
+    if (randomPosY === e.y || randomPosY >= this.game.canvas.height || randomPosY <=0)
+      { control = false} 
     else { control = true }
-  });
+  }.bind(this));
 
   if (control) {
+    debugger;
     this.x = randomPosX;
     this.y = randomPosY;
   } else {
